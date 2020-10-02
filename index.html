@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DXC.technology</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .container {
+      height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+	body {
+		font-family: Helvetica;
+	}
+
+	ul {
+	  list-style-type: none;
+	  line-height: 24px;
+	  margin: 0;
+	  padding: 0;
+	}
+
+	sup {
+	  vertical-align: baseline;
+	  position: relative;
+	  top: -0.4em;
+	  color: red;
+	}
+
+	div.templates {
+	  display: none;
+	}
+
+	div.title {
+	  float: left;
+	  overflow: auto;
+	}
+	
+	div.createdAt {
+	  float: left;
+	  overflow: auto;
+	  font-size: .75em;
+	  color: #666;
+	  line-height: normal;
+	}
+
+	div.description {
+	  overflow: auto;
+	  font-size: .75em;
+	  color: #666;
+	  line-height: normal;
+	}
+
+	.row1,
+	.row2 {
+	  clear: both;
+	}
+	li {
+	  padding: 5px 0;
+	}
+  </style>
+  <body>
+    <div class="container">
+      <h1>DXC.technology</h1>
+      </h1>
+	    <div id="msg">Seja o primeiro a nos contatar</div>
+	    <ul id="dataList"></ul>
+		  <div class="templates">
+			<div id="listItem">
+			  <div class="row1">
+				<div class="title"></div>
+				<div class="createdAt"></div>
+			  </div>
+			  <div class="row2"><div class="description"></div></div>
+			</div>
+		  </div>
+    </div>
+    <script>
+		window.setInterval(sendData, 5000);
+	  
+	  
+	  
+	  var listItemString
+      function sendData() {
+        
+        fetch("https://social-media-analysis.azurewebsites.net/socialmedia/twitter/dxc/pt?count=5", {
+          method: "GET",
+        })
+          .then(res => res.json())
+          .then(data => {
+			console.log(data);
+			var dataObject = data.socialMedia.twitter;
+			listItemString = $('#listItem').html();
+			$('#msg').remove()
+			$('#dataList').empty()
+			dataObject.forEach(buildNewList);
+          })
+          .catch(err => console.log(err));
+      }
+	  
+	  
+		function buildNewList(item, index) {
+		  var listItem = $('<li>' + listItemString + '</li>');
+		  var listItemTitle = $('.title', listItem);
+		  listItemTitle.html('@'+item.id);
+		  var listItemDesc = $('.description', listItem);
+		  listItemDesc.html(item.text);
+		  $('#dataList').append(listItem);
+		}
+    </script>
+  </body>
+</html>
